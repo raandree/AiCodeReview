@@ -1,0 +1,83 @@
+# PowerShell Security Code Review Template - Git Ignore
+
+# User-specific PowerShell modules to scan
+source/AADConnectDsc/
+source/xPSDesiredStateConfiguration/
+source/*/
+
+# Generated security reports
+Report/*.md
+!Report/README.md
+
+# PowerShell temporary files
+*.ps1~
+*.psm1~
+*.psd1~
+
+# Visual Studio Code
+.vscode/
+.vs/
+
+# IDE and Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PowerShell module cache
+PSGetModuleInfo.xml
+
+# Pester test results
+TestResults/
+*.xml
+testresults*.xml
+
+# Code coverage
+coverage.xml
+*.coverage
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+build/
+dist/
+out/
+
+# Package files
+*.nupkg
+*.zip
+
+# Windows specific
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS specific
+.AppleDouble
+.LSOverride
+
+# Linux specific
+.fuse_hidden*
+.directory
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# User-specific notes
+NOTES.md
+TODO.md
+
+# Keep these files
+!.gitignore
+!README.md
+!source/README.md
+!Report/README.md
