@@ -22,6 +22,41 @@ This repository provides a **comprehensive template and framework for AI-assiste
 ✅ **AI-Optimized Workflow** designed for AI coding agents  
 ✅ **Production Readiness Validation** with security gating  
 
+## Setup and Installation
+
+### Prerequisites
+
+Before using this template, ensure your system meets these requirements:
+
+- **Windows 10/11** or **Windows Server 2016+**
+- **Administrator privileges** (for initial setup)
+- **PowerShell 5.1+** installed
+- **Internet connectivity** for downloading packages
+- **10GB+ free disk space** recommended
+
+### Quick Installation
+
+```powershell
+# Install required PowerShell modules
+Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+Install-Module -Name Pester -MinimumVersion 5.0 -Scope CurrentUser -Force -AllowClobber -SkipPublisherCheck
+
+# Verify installation
+Get-Module -Name PSScriptAnalyzer, Pester -ListAvailable
+```
+
+### Complete Setup Guide
+
+For comprehensive setup instructions including:
+
+- **Chocolatey installation** - Automated package management for Windows
+- **Tool installation** - PowerShell Core, Git, VS Code via Chocolatey or manual
+- **Windows Defender configuration** - Optional exclusions or disable for development machines
+- **Troubleshooting** - Solutions for common installation issues
+- **Maintenance** - Keeping tools updated and cleanup procedures
+
+📖 **See the complete [SETUP.md](SETUP.md) guide**
+
 ## Quick Start
 
 ### Starting an AI-Assisted Code Review
@@ -111,6 +146,15 @@ For detailed information about each directory, see the README.md file in that di
 
 ## Documentation
 
+### Getting Started
+
+- 📖 **[SETUP.md](SETUP.md)** - **Complete installation and setup guide**
+  - Chocolatey package manager installation
+  - Tool installation (PowerShell, Git, VS Code)
+  - Windows Defender configuration options
+  - Troubleshooting common issues
+  - Maintenance and update procedures
+
 ### Core Documentation
 
 - **[Project Brief](memory-bank/projectbrief.md)** - Project overview and objectives
@@ -120,11 +164,12 @@ For detailed information about each directory, see the README.md file in that di
 
 ### Component Documentation
 
-- **[Memory Bank](memory-bank/README.md)** - Project documentation system
-- **[Scanner](scanner/README.md)** - Security scanning tools
+- **[Scanner](scanner/README.md)** - Security scanning tools and usage
 - **[Detection Rules](scanner/rules/PowerShellContextRules.md)** - Rule definitions and context
+- **[Source](source/README.md)** - Module placement and test modules
 - **[Reports](Report/README.md)** - Report structure and examples
 - **[Tests](tests/README.md)** - Testing framework
+- **[Memory Bank](memory-bank/README.md)** - AI context documentation system
 
 ## Validation and Testing
 

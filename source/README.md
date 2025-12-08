@@ -4,6 +4,15 @@
 
 This directory is where you place PowerShell modules that you want to analyze for security vulnerabilities.
 
+## Getting Started
+
+If this is your first time using this tool:
+
+1. **Complete setup**: See [SETUP.md](../SETUP.md) for installation instructions
+2. **Place modules here**: Copy PowerShell modules you want to scan into this directory
+3. **Run scanner**: Execute `..\scanner\Invoke-SecurityScan.ps1` against your modules
+4. **Review reports**: Check generated reports in `..\Report\` directory
+
 ## Test Modules
 
 ### BadCodeExamples.psm1

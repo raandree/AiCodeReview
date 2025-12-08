@@ -8,10 +8,55 @@
 
 ## AI Code Review Initiation
 
-To start an AI-assisted code review session, use:
+### Quick Start with AI Agent
 
-```text
-Start the code review by executing the prompt file `D:\Git\ai1\.clinerules\prompts\CodeReview.prompt.md`
+To start an AI-assisted code review session:
+
+1. **Open VS Code** in the project directory:
+   ```powershell
+   cd D:\Git\AiCodeReview
+   code .
+   ```
+
+2. **Open GitHub Copilot Chat** in VS Code
+
+3. **Execute this prompt**:
+   ```text
+   Start the code review by executing the prompt file `.github\prompts\CodeReview.prompt.md`. 
+   Execute all steps in sequence, utilizing the memory bank for context.
+   
+   IMPORTANT: Finish all the prompts even if you think that 'all primary objectives' have been completed.
+   ```
+
+### Automated Workflow Execution
+
+The AI agent will execute phases automatically:
+
+1. **Setup Phase**: Read Memory Bank, validate context
+2. **Analysis Phase**: Execute security scanning on modules in `source/`
+3. **Detection Phase**: Apply all 45 security rules with context awareness
+4. **Reporting Phase**: Generate executive summary and detailed reports
+5. **Validation Phase**: Review findings, validate detection accuracy
+6. **Documentation Phase**: Update Memory Bank with results
+
+### Expected Outputs
+
+After automated execution completes:
+
+- **Memory Bank**: Updated with latest scan results and findings
+- **Detection Rules**: All rules validated and applied
+- **Reports/**: 
+  - Executive summary covering all scanned modules
+  - Detailed per-module security reports with CVSS scores
+  - Source code context for each finding
+- **README files**: Comprehensive documentation at all levels
+
+### Manual Execution Alternative
+
+If not using AI automation, manually run:
+
+```powershell
+.\scanner\Invoke-SecurityScan.ps1 -Path .\source\YourModule -OutputPath .\Report -Verbose
 ```
 
 ## Template Components
@@ -60,6 +105,62 @@ Start the code review by executing the prompt file `D:\Git\ai1\.clinerules\promp
 - **Severity Distribution (v1.1.0)**: Critical: 11, High: 13, Medium: 11, Low: 6, Info: 4
 - **New Rules**: 20 additional rules for 2025 threat landscape
 - **Context Analysis**: 6 new intelligent filtering rules added
+
+## Security Assessment Findings
+
+**Last Assessment**: 2025-12-01
+**Status**: CONDITIONAL APPROVAL
+**Modules Assessed**: PSFramework v1.13.419, BadCodeExamples (test module)
+
+### Overall Results
+
+| Module | Total Findings | Critical | High | Medium | Low | Info | Status |
+|--------|----------------|----------|------|--------|-----|------|--------|
+| PSFramework | 1537 | 6 | 43 | 20 | 351 | 1117 | CONDITIONAL APPROVAL |
+| BadCodeExamples | 189 | 8 | 10 | 10 | 61 | 100 | TEST MODULE (Not for production) |
+| **Total** | **1726** | **14** | **53** | **30** | **412** | **1217** | |
+
+### Key Security Patterns Identified
+
+**PSFramework (Production Module)**:
+- Certificate validation bypass in Splunk logging provider (CRITICAL - PS019)
+- Dynamic configuration loading via DownloadString (CRITICAL - PS030)
+- PowerShell remoting usage (Expected framework functionality - PS056)
+- Invoke-Expression for manifest loading (Standard PowerShell pattern - PS001)
+- 298 empty catch blocks, 130 missing CmdletBinding (Code quality, not security)
+
+**Actual Security Risk**: Low to Medium (most findings are false positives given module's administrative purpose)
+
+**BadCodeExamples (Test Module)**:
+- Successfully validates 95.6% rule detection (43 of 45 rules triggered)
+- All findings are intentional vulnerabilities for scanner validation
+- Demonstrates scanner can detect 2025 advanced threats (PS041-PS060)
+
+### Security Debt
+
+**Priority 1: MUST FIX (PSFramework)**
+- Certificate Validation Bypass (PS019) in `splunk.provider.ps1`
+  - Impact: Critical if Splunk logging used in production
+  - Status: Awaiting remediation or feature disabled
+  - CVSS: 9.1
+
+**Priority 2: SHOULD FIX (PSFramework)**
+- Remote configuration loading security (PS030)
+  - Add signature verification for remote configurations
+  - Implement configuration source whitelisting
+  - Add integrity checking (SHA256)
+  - CVSS: 8.8
+
+**Priority 3: OPTIONAL (PSFramework)**
+- Empty catch blocks (PS036): 298 instances
+- Missing CmdletBinding (PS037): 130 instances
+- Impact: Code quality, not security
+
+### Remediation Status
+
+- [ ] Certificate bypass in Splunk provider - **Pending** (Do not use Splunk logging until fixed)
+- [ ] Configuration loading hardening - **Recommended** (Add signature verification)
+- [ ] Code quality improvements - **Optional** (Empty catches, CmdletBinding)
 
 ## Key Design Decisions
 

@@ -6,7 +6,7 @@
 
 **Current Phase**: Enhanced with 2025 threat intelligence
 
-**Last Updated**: 2025-11-25
+**Last Updated**: 2025-12-08
 
 ## Executive Summary
 
@@ -30,6 +30,7 @@ This is a production-ready template for AI-assisted PowerShell security code rev
 - ✅ `systemPatterns.md` - Technical architecture and design patterns
 - ✅ `techContext.md` - Technologies, dependencies, and setup instructions
 - ✅ `activeContext.md` - Current template state and usage guidance
+- ✅ `setupGuide.md` - Comprehensive machine setup and installation guide
 - ✅ `progress.md` - This file
 - ✅ `promptHistory.md` - Tracking AI-assisted development (historical record)
 
@@ -83,12 +84,14 @@ This is a production-ready template for AI-assisted PowerShell security code rev
 
 ### Documentation (100%)
 
-- ✅ Root `README.md` - Comprehensive template guide
-- ✅ `source/README.md` - Instructions for placing modules
-- ✅ `Report/README.md` - Report structure and usage
-- ✅ `scanner/README.md` - Scanner reference documentation
+- ✅ Root `README.md` - Comprehensive template guide with setup section
+- ✅ **`SETUP.md`** - **User-facing complete setup and installation guide**
+- ✅ `source/README.md` - Instructions for placing modules with setup reference
+- ✅ `Report/README.md` - Report structure and usage with getting started guide
+- ✅ `scanner/README.md` - Scanner reference documentation with prerequisites
 - ✅ `tests/README.md` - Testing framework guide
 - ✅ `memory-bank/README.md` - Memory Bank structure explanation
+- ✅ `memory-bank/setupGuide.md` - AI context version of setup guide
 - ✅ `.gitignore` - Version control exclusions
 
 ## Template Features

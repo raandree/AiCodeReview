@@ -75,18 +75,73 @@
 
 ## Development Setup
 
-### Prerequisites
+### System Prerequisites
+
+Before using this security code review template, ensure your system meets these requirements:
+
+- **Windows 10/11** or **Windows Server 2016+**
+- **Administrator privileges** (for initial setup)
+- **Internet connectivity** (for downloading packages and modules)
+- **Sufficient disk space** (minimum 10GB free recommended)
+- **GitHub Copilot** subscription (for AI-assisted workflows)
+- **VS Code** with GitHub Copilot extension configured
+
+### Tool Installation
+
+#### Method 1: Using Chocolatey (Recommended)
+
+Chocolatey simplifies software installation on Windows:
+
+```powershell
+# Install Chocolatey (run as Administrator)
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# Verify Chocolatey installation
+choco --version
+
+# Install required tools
+choco install powershell-core -y      # PowerShell 7+
+choco install git.install -y          # Git for version control
+choco install vscode -y               # Visual Studio Code
+```
+
+#### Method 2: Manual Installation
+
+1. **PowerShell 7+**: Download from [PowerShell GitHub](https://github.com/PowerShell/PowerShell/releases)
+2. **Git**: Download from [git-scm.com](https://git-scm.com/)
+3. **VS Code**: Download from [code.visualstudio.com](https://code.visualstudio.com/)
+
+### Required PowerShell Modules
 
 ```powershell
 # PowerShell version check
 $PSVersionTable.PSVersion  # Should be 5.1 or higher
 
-# Required modules
-Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force
-Install-Module -Name Pester -MinimumVersion 5.0 -Scope CurrentUser -Force
+# Install PSScriptAnalyzer (required for security scanning)
+Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+
+# Install Pester (required for testing framework)
+Install-Module -Name Pester -MinimumVersion 5.0 -Scope CurrentUser -Force -AllowClobber -SkipPublisherCheck
 
 # Optional but recommended
 Install-Module -Name platyPS -Scope CurrentUser  # For help documentation
+```
+
+### Verify Installation
+
+```powershell
+# Check all required tools are in PATH
+Get-Command choco, git, code, pwsh -ErrorAction SilentlyContinue
+
+# Verify PowerShell modules
+Get-Module -Name PSScriptAnalyzer, Pester -ListAvailable
+
+# Check versions
+git --version
+code --version
+$PSVersionTable.PSVersion
 ```
 
 ### Environment Configuration
@@ -103,6 +158,48 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```powershell
 # Ensure source modules can be loaded for analysis
 $env:PSModulePath += ";$PWD\source"
+```
+
+### Windows Defender Configuration (Optional)
+
+**⚠️ WARNING**: Disabling Windows Defender reduces system security. Only configure on isolated development/test machines, never on production systems.
+
+**Recommended Approach - Add Exclusions**:
+
+```powershell
+# Add folder exclusion for the project directory (run as Administrator)
+Add-MpPreference -ExclusionPath "D:\Git\AiCodeReview"
+
+# Add process exclusions for development tools
+Add-MpPreference -ExclusionProcess "pwsh.exe", "powershell.exe", "Code.exe"
+
+# Verify exclusions
+Get-MpPreference | Select-Object -Property ExclusionPath, ExclusionProcess
+```
+
+**Remove Exclusions When Complete**:
+
+```powershell
+# Remove exclusions after analysis
+Remove-MpPreference -ExclusionPath "D:\Git\AiCodeReview"
+Remove-MpPreference -ExclusionProcess "pwsh.exe", "powershell.exe", "Code.exe"
+```
+
+**Alternative - Full Disable (NOT RECOMMENDED)**:
+
+Only use in isolated lab environments:
+
+```powershell
+# Disable Windows Defender (requires Administrator)
+Set-MpPreference -DisableRealtimeMonitoring $true
+Set-MpPreference -DisableBehaviorMonitoring $true
+
+# Verify status
+Get-MpComputerStatus
+
+# Re-enable when done (IMPORTANT)
+Set-MpPreference -DisableRealtimeMonitoring $false
+Set-MpPreference -DisableBehaviorMonitoring $false
 ```
 
 ### Project Structure

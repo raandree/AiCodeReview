@@ -99,6 +99,26 @@ flowchart TD
 
 ---
 
+#### `setupGuide.md`
+
+**Purpose**: Comprehensive machine setup and installation instructions
+
+**Contents**:
+
+- System prerequisites and requirements
+- Tool installation steps (Chocolatey, PowerShell, Git, VS Code)
+- PowerShell module installation
+- Environment configuration
+- Windows Defender configuration (optional)
+- Troubleshooting common issues
+- Maintenance and cleanup procedures
+
+**When to Read**: When setting up a new development/analysis machine
+
+**When to Update**: When installation procedures or prerequisites change
+
+---
+
 #### `techContext.md`
 
 **Purpose**: Technologies, tools, and development setup

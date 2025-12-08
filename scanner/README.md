@@ -4,6 +4,23 @@
 
 The security scanner is an automated PowerShell code analysis tool that identifies security vulnerabilities, malicious code patterns, and deviations from PowerShell security best practices.
 
+## Prerequisites
+
+Before running the scanner, ensure you have:
+
+- **PowerShell 5.1+** installed
+- **PSScriptAnalyzer** module installed
+- **Pester** module installed (for testing)
+
+**Quick Install**:
+
+```powershell
+Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber
+Install-Module -Name Pester -MinimumVersion 5.0 -Scope CurrentUser -Force -AllowClobber -SkipPublisherCheck
+```
+
+📖 **For complete setup instructions**, see [SETUP.md](../SETUP.md) in the root directory.
+
 ## Components
 
 ### Main Scanner
