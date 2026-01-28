@@ -1,83 +1,34 @@
 # Prompt History
 
-## Purpose
+## 2025-01-23 - Create Changelog Instructions File
 
-This file tracks all prompts and interactions with AI coding agents throughout the project lifecycle. It serves as an audit trail and knowledge base for understanding how the project evolved through AI-assisted development.
+**Prompt**: Please add an instruction file that tells the AI how to handle the changelog.md. The instructions should be based on https://keepachangelog.com/en/1.1.0/. Please also do some research for additional sources.
 
-## Date: 2025-12-08
+**Action Taken**:
+1. Researched Keep a Changelog 1.1.0 from https://keepachangelog.com/en/1.1.0/
+2. Researched Common Changelog from https://common-changelog.org/ (stricter subset of Keep a Changelog)
+3. Researched CloudBees best practices for changelog management
+4. Created comprehensive `.clinerules/instructions/changelog.instructions.md` with:
+   - Core principles from Keep a Changelog 1.1.0 and Common Changelog
+   - File format requirements (CHANGELOG.md naming, structure)
+   - Version entry format with linkable versions
+   - Change categories (Added, Changed, Deprecated, Removed, Fixed, Security)
+   - Writing guidelines (imperative mood, self-describing entries, references, credits)
+   - Unreleased section management
+   - Special entries (initial release, yanked releases, notices)
+   - What to include/exclude guidance
+   - Antipatterns to avoid
+   - Integration with semantic versioning
+   - Multi-component project strategies
+   - CI/CD integration examples
+   - Quality checklists and templates
+5. Updated `.clinerules/instructions/markdown.instructions.md` to reference the new changelog file instead of duplicating content
 
-### Prompt: Integration of Old Documentation
-
-**Time**: 2025-12-08 (Session Start)
-
-**User Request**:
-> I have found some old documentation that i have made avilable here: '.\temp\old intro.md'. Is this useful for this project? If so, integerate it into the current project documentation.
-
-**Context**: User provided legacy documentation from a previous iteration of the project with machine setup and execution workflow instructions.
-
-**Analysis Performed**:
-1. Read old intro.md file (339 lines) containing comprehensive setup guide
-2. Compared against current Memory Bank documentation
-3. Identified valuable missing content:
-   - Detailed tool installation procedures (Chocolatey, PowerShell, Git, VS Code)
-   - PowerShell module installation steps
-   - Windows Defender configuration guidance
-   - AI workflow execution pattern with Copilot
-   - Troubleshooting common issues
-   - Maintenance and cleanup procedures
-
-**Actions Taken**:
-
-1. **Enhanced 	echContext.md**:
-   - Added comprehensive prerequisites section
-   - Integrated Chocolatey installation instructions
-   - Added PowerShell module installation steps
-   - Included Windows Defender configuration guidance (with security warnings)
-   - Added verification commands for all tools
-
-2. **Enhanced ctiveContext.md**:
-   - Expanded AI Code Review Initiation section
-   - Added detailed workflow execution steps
-   - Documented expected outputs after automation
-   - Included manual execution alternative
-
-3. **Created setupGuide.md**:
-   - Comprehensive standalone setup guide
-   - Step-by-step installation procedures
-   - Troubleshooting section for common issues
-   - Maintenance and update procedures
-   - Security considerations and audit trail guidance
-   - Complete resource links for all tools
-
-4. **Updated memory-bank/README.md**:
-   - Added setupGuide.md to file structure documentation
-   - Documented when to read and update setup guide
-
-5. **Updated main README.md**:
-   - Added Prerequisites section in Quick Start
-   - Referenced setupGuide.md for detailed instructions
-   - Provided quick verification commands
-
-6. **Updated progress.md**:
-   - Added setupGuide.md to completed Memory Bank components
-
-**Outcome**: 
-✅ Successfully integrated all valuable content from old documentation into appropriate Memory Bank files. The setup process is now comprehensively documented for new users, with troubleshooting guidance and security considerations clearly outlined.
+**Files Created**:
+- `.clinerules/instructions/changelog.instructions.md`
 
 **Files Modified**:
-- memory-bank/techContext.md - Enhanced with setup prerequisites and Windows Defender config
-- memory-bank/activeContext.md - Enhanced with detailed AI workflow steps
-- memory-bank/setupGuide.md - **NEW** - Comprehensive setup guide
-- memory-bank/README.md - Added setupGuide.md reference
-- README.md - Added Prerequisites section
-- memory-bank/progress.md - Updated to track setupGuide.md
-
-**Value Added**:
-- New users have clear, comprehensive setup instructions
-- Troubleshooting guidance reduces friction in getting started
-- Security warnings ensure safe configuration practices
-- Maintenance procedures documented for long-term project health
-- AI workflow execution pattern clearly documented for automation
+- `.clinerules/instructions/markdown.instructions.md` (removed duplicate changelog section, added reference to new file)
 
 ---
 
@@ -205,3 +156,57 @@ This project has evolved through AI-assisted development with GitHub Copilot. Pr
 - All AI interactions should be logged here with date, prompt, analysis, actions, and outcomes
 - This audit trail helps future AI sessions understand project evolution
 - Maintains transparency in AI-assisted development process
+This file tracks all prompts and interactions with the AI agent for the AiCodeReview project.
+
+## 2025-12-14 16:47:26 (Europe/Berlin, UTC+1:00)
+
+**User Request**: There are language specific instructions in the folder D:\Git\AiCodeReview\.clinerules\instructions. I want this project to cover c# as well. Please study the memory bank to learn about the project. Then browse the web for coding best practices for c# and store the knowledge in a new instruction file.
+
+**Task Completed**: 
+- Read Memory Bank files to understand the project context
+- Studied existing PowerShell instruction file format and structure
+- Researched C# coding best practices from Microsoft Learn:
+  - Secure Coding Guidelines for .NET
+  - .NET Coding Conventions for C#
+- Searched for additional OWASP security guidelines
+- Created comprehensive C# instruction file at `.clinerules/instructions/csharp.instructions.md`
+
+**Key Deliverables**:
+1. New file: `.clinerules/instructions/csharp.instructions.md` (comprehensive 1500+ line C# coding standards document)
+2. Coverage includes:
+   - Naming conventions (PascalCase, camelCase, ALL_CAPS)
+   - Code style and formatting (Allman brace style, 4-space indentation)
+   - Type usage (language keywords vs. runtime types, var usage)
+   - Modern C# features (nullable reference types, pattern matching, records, primary constructors, collection expressions)
+   - String handling (interpolation, raw string literals, StringBuilder)
+   - Exception handling (try-catch-finally, using statements, exception filters)
+   - LINQ and collections
+   - Async/await best practices
+   - **Security best practices (CRITICAL)**:
+     - Input validation
+     - SQL injection prevention with parameterized queries
+     - XSS prevention with output encoding
+     - Secure password hashing (PBKDF2)
+     - API key and secret management
+     - Deserialization security
+     - Path traversal prevention
+     - CSRF protection
+   - Dependency injection patterns
+   - XML documentation comments
+   - Testing considerations
+   - Performance best practices (Span<T>, avoiding boxing, ValueTask)
+   - Code analysis tools and EditorConfig settings
+   - Common anti-patterns to avoid
+   - File organization standards
+
+**Sources Referenced**:
+- Microsoft Learn: Secure Coding Guidelines for .NET
+- Microsoft Learn: .NET Coding Conventions
+- .NET Runtime coding guidelines (GitHub)
+- C# Compiler (Roslyn) guidelines
+- OWASP security best practices
+- Existing PowerShell instruction file format
+
+**Project Context**: This C# instruction file now extends the AiCodeReview project's capability to assess C# code in addition to PowerShell, following the same comprehensive security-first approach established for PowerShell modules.
+
+**File Structure**: The instruction file follows the exact format pattern of the PowerShell instruction file, with `applyTo: "**/*.cs,**/*.csx"` metadata to target C# files.
