@@ -475,6 +475,52 @@ Write-Error "Error message"  # Always shown
 Write-Information "Informational message"  # PowerShell 5+
 ```
 
+### String Interpolation in Write Messages
+
+When using variable interpolation in `Write-Verbose`, `Write-Debug`, `Write-Warning`, `Write-Error`, or `Write-Information` messages, wrap the interpolated values in single quotes within the double-quoted string. This improves readability and makes it clear what value was substituted.
+
+**Exception**: Integers (like counts or indices) do not need single quotes.
+
+```powershell
+# CORRECT - String values wrapped in single quotes
+Write-Verbose "Processing file '$filePath'"
+Write-Verbose "User '$userName' logged in from '$computerName'"
+Write-Warning "Configuration file '$configPath' not found"
+Write-Error "Failed to connect to server '$serverName'"
+
+# CORRECT - Integers don't need quotes
+Write-Verbose "Processing $count items"
+Write-Verbose "Found $($results.Count) matching records"
+Write-Debug "Iteration $i of $total"
+
+# CORRECT - Mixed usage
+Write-Verbose "Processing item $index of $total: '$itemName'"
+Write-Information "Exported $recordCount records to '$outputPath'"
+
+# INCORRECT - String values without quotes (harder to read in logs)
+Write-Verbose "Processing file $filePath"
+Write-Verbose "User $userName logged in"
+Write-Warning "Configuration file $configPath not found"
+```
+
+#### Why This Matters
+
+1. **Log Clarity**: When reviewing logs, quoted values are immediately distinguishable from surrounding text
+2. **Empty Value Detection**: Empty strings become visible as `''` rather than invisible gaps
+3. **Path Readability**: Paths with spaces are clearly delineated
+4. **Debugging**: Makes it obvious what the actual value was at runtime
+
+```powershell
+# Example: Empty value is visible with quotes
+$userName = ""
+Write-Verbose "User '$userName' not found"  # Output: User '' not found
+Write-Verbose "User $userName not found"    # Output: User  not found (confusing!)
+
+# Example: Path with spaces is clear
+$path = "C:\Program Files\My App"
+Write-Verbose "Installing to '$path'"  # Clear where path begins/ends
+```
+
 ## PSScriptAnalyzer Rules
 
 ### Critical Rules
