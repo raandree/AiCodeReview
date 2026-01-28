@@ -128,6 +128,93 @@ function Get-Data {
 [string]$ComputerName
 ```
 
+### Begin, Process, End Blocks
+
+**CRITICAL**: Only use `begin`, `process`, and `end` blocks when the function has pipeline-enabled input parameters. These blocks are for **pipeline processing mechanics**, not for code organization or structuring scripts.
+
+#### When to Use
+
+Use these blocks **ONLY** when you have parameters decorated with:
+- `[Parameter(ValueFromPipeline)]`
+- `[Parameter(ValueFromPipelineByPropertyName)]`
+
+```powershell
+# CORRECT - Pipeline input requires process block
+function Get-ProcessedItem {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline)]
+        [string]$InputObject
+    )
+    
+    begin {
+        # One-time initialization (runs once before pipeline processing)
+        $results = [System.Collections.ArrayList]::new()
+    }
+    
+    process {
+        # Runs for EACH pipeline object
+        [void]$results.Add($InputObject.ToUpper())
+    }
+    
+    end {
+        # One-time cleanup/output (runs once after all pipeline processing)
+        $results
+    }
+}
+
+# Usage: 'item1', 'item2', 'item3' | Get-ProcessedItem
+```
+
+#### When NOT to Use
+
+Do **NOT** use `begin`, `process`, and `end` blocks simply to organize code:
+
+```powershell
+# INCORRECT - No pipeline input, blocks are unnecessary
+function Get-Configuration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path  # Not pipeline-enabled!
+    )
+    
+    begin {
+        # Unnecessary structure
+    }
+    
+    process {
+        # Wrong usage - this parameter doesn't come from pipeline
+    }
+    
+    end {
+        # Unnecessary cleanup
+    }
+}
+
+# CORRECT - Simple function without pipeline input
+function Get-Configuration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    
+    # Direct implementation - no blocks needed
+    Get-Content -Path $Path | ConvertFrom-Json
+}
+```
+
+#### Purpose of Each Block
+
+| Block | Purpose | Runs |
+|-------|---------|------|
+| `begin` | One-time initialization before pipeline processing | Once at start |
+| `process` | Process each pipeline object | Once per pipeline object |
+| `end` | One-time cleanup or final output | Once at end |
+
+**Remember**: These blocks exist to handle pipeline streaming efficiently, not for code organization.
+
 ## Naming Conventions
 
 ### Functions and Cmdlets
