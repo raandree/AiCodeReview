@@ -128,6 +128,93 @@ function Get-Data {
 [string]$ComputerName
 ```
 
+### Begin, Process, End Blocks
+
+**CRITICAL**: Only use `begin`, `process`, and `end` blocks when the function has pipeline-enabled input parameters. These blocks are for **pipeline processing mechanics**, not for code organization or structuring scripts.
+
+#### When to Use
+
+Use these blocks **ONLY** when you have parameters decorated with:
+- `[Parameter(ValueFromPipeline)]`
+- `[Parameter(ValueFromPipelineByPropertyName)]`
+
+```powershell
+# CORRECT - Pipeline input requires process block
+function Get-ProcessedItem {
+    [CmdletBinding()]
+    param(
+        [Parameter(ValueFromPipeline)]
+        [string]$InputObject
+    )
+    
+    begin {
+        # One-time initialization (runs once before pipeline processing)
+        $results = [System.Collections.ArrayList]::new()
+    }
+    
+    process {
+        # Runs for EACH pipeline object
+        [void]$results.Add($InputObject.ToUpper())
+    }
+    
+    end {
+        # One-time cleanup/output (runs once after all pipeline processing)
+        $results
+    }
+}
+
+# Usage: 'item1', 'item2', 'item3' | Get-ProcessedItem
+```
+
+#### When NOT to Use
+
+Do **NOT** use `begin`, `process`, and `end` blocks simply to organize code:
+
+```powershell
+# INCORRECT - No pipeline input, blocks are unnecessary
+function Get-Configuration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path  # Not pipeline-enabled!
+    )
+    
+    begin {
+        # Unnecessary structure
+    }
+    
+    process {
+        # Wrong usage - this parameter doesn't come from pipeline
+    }
+    
+    end {
+        # Unnecessary cleanup
+    }
+}
+
+# CORRECT - Simple function without pipeline input
+function Get-Configuration {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    
+    # Direct implementation - no blocks needed
+    Get-Content -Path $Path | ConvertFrom-Json
+}
+```
+
+#### Purpose of Each Block
+
+| Block | Purpose | Runs |
+|-------|---------|------|
+| `begin` | One-time initialization before pipeline processing | Once at start |
+| `process` | Process each pipeline object | Once per pipeline object |
+| `end` | One-time cleanup or final output | Once at end |
+
+**Remember**: These blocks exist to handle pipeline streaming efficiently, not for code organization.
+
 ## Naming Conventions
 
 ### Functions and Cmdlets
@@ -386,6 +473,52 @@ Write-Debug "Debug information"  # -Debug flag
 Write-Warning "Warning message"  # Always shown
 Write-Error "Error message"  # Always shown
 Write-Information "Informational message"  # PowerShell 5+
+```
+
+### String Interpolation in Write Messages
+
+When using variable interpolation in `Write-Verbose`, `Write-Debug`, `Write-Warning`, `Write-Error`, or `Write-Information` messages, wrap the interpolated values in single quotes within the double-quoted string. This improves readability and makes it clear what value was substituted.
+
+**Exception**: Integers (like counts or indices) do not need single quotes.
+
+```powershell
+# CORRECT - String values wrapped in single quotes
+Write-Verbose "Processing file '$filePath'"
+Write-Verbose "User '$userName' logged in from '$computerName'"
+Write-Warning "Configuration file '$configPath' not found"
+Write-Error "Failed to connect to server '$serverName'"
+
+# CORRECT - Integers don't need quotes
+Write-Verbose "Processing $count items"
+Write-Verbose "Found $($results.Count) matching records"
+Write-Debug "Iteration $i of $total"
+
+# CORRECT - Mixed usage
+Write-Verbose "Processing item $index of $total: '$itemName'"
+Write-Information "Exported $recordCount records to '$outputPath'"
+
+# INCORRECT - String values without quotes (harder to read in logs)
+Write-Verbose "Processing file $filePath"
+Write-Verbose "User $userName logged in"
+Write-Warning "Configuration file $configPath not found"
+```
+
+#### Why This Matters
+
+1. **Log Clarity**: When reviewing logs, quoted values are immediately distinguishable from surrounding text
+2. **Empty Value Detection**: Empty strings become visible as `''` rather than invisible gaps
+3. **Path Readability**: Paths with spaces are clearly delineated
+4. **Debugging**: Makes it obvious what the actual value was at runtime
+
+```powershell
+# Example: Empty value is visible with quotes
+$userName = ""
+Write-Verbose "User '$userName' not found"  # Output: User '' not found
+Write-Verbose "User $userName not found"    # Output: User  not found (confusing!)
+
+# Example: Path with spaces is clear
+$path = "C:\Program Files\My App"
+Write-Verbose "Installing to '$path'"  # Clear where path begins/ends
 ```
 
 ## PSScriptAnalyzer Rules
